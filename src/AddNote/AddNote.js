@@ -1,0 +1,112 @@
+import React from 'react';
+import ApiContext from '../ApiContext';
+import config from '../config';
+import { Redirect } from 'react-router-dom';
+import CircleButton from '../CircleButton/CircleButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+export default class AddNote extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state ={
+            noteName: '',
+            contents: '',
+            chosenFolder: 'b0715efe-ffaf-11e8-8eb2-f2801f1b9fd1',
+            redirect: false,
+        };
+    }
+
+    static contextType = ApiContext;
+
+    updateNoteName(noteName) {
+        this.setState({ noteName: noteName });
+      }
+    
+      updateContents(contents) {
+        this.setState({ contents:  contents });
+      }
+    
+      updateChosenFolder(chosenFolder) {
+        this.setState({ chosenFolder: chosenFolder });
+      }
+    
+      formSubmitRedirect() {
+        this.setState({redirect: true});
+        this.renderRedirect();
+      }
+
+    renderRedirect = () => {
+        if(this.state.redirect) {
+            return <Redirect to='/' />;
+        }
+    }
+
+    handleNoteSubmit = e => {
+        e.preventDefault();
+
+        if (this.state.noteName.length === 0) {
+            return alert('Please enter a note name');
+        } 
+        else if (this.state.contents.length === 0) {
+            return alert('Please enter the contents of the note');
+        }
+
+        const newNote = {
+            name: this.state.noteName,
+            content: this.state.contents,
+            folderId: this.state.chosenFolder,
+            modified: new Date(),
+        };
+
+        fetch(`${config.API_ENDPOINT}/notes`, {
+            method: "POST",
+            body: JSON.stringify(newNote),
+            headers: {
+              "content-type": "application/json"
+            }
+          })
+          .then(res => {
+            if (!res.ok) 
+            return res.json()
+            .then(e => Promise.reject(e));
+            return res.json();
+          })
+          .then((newNote) => {
+            this.context.addNote(newNote);
+            this.formSubmitRedirect()
+          })
+            .catch(error => {
+              console.error({ error });
+            });
+    };
+
+    render () {
+        const folders = this.context.folders;
+
+        return (
+            <>
+                {this.renderRedirect()}
+                <form className='addNote'>
+                    <label htmlFor='noteName'>Name</label>
+                    <input type='text' id='noteName' onChange={e => this.updateNoteName(e.target.value)} required
+                    />
+                    <label htmlFor='contents'>contents go here...</label>
+                    <input type='text' id='contents' onChange={e => this.updateContents(e.target.value)}  
+                    />
+                    <label htmlFor='folder'>Assigned Folder</label>
+                    <select id='chosenFolder' onChange={e => this.updateChosenFolder(e.target.value)}>
+                        {folders.map(choice => (<option value={choice.id}>{choice.name}</option>))};
+                    </select>
+                    <button type='submit' onClick={this.handleNoteSubmit} className='addSubmit'>
+                        Add Note
+                    </button>
+                </form>
+                <CircleButton tag='button' role='link' onClick={() => this.props.history.goBack()} className='Add-back-button'>
+                    <FontAwesomeIcon icon='chevron-left' />
+                    {' '}
+                    Back
+                </CircleButton>
+            </>
+        );
+    }
+}
