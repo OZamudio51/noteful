@@ -95,7 +95,7 @@ export default class AddNote extends React.Component {
                     />
                     <label htmlFor='folder'>Assigned Folder</label>
                     <select id='chosenFolder' onChange={e => this.updateChosenFolder(e.target.value)}>
-                        {folders.map(choice => (<option value={choice.id}>{choice.name}</option>))};
+                        {folders.map(choice => (<option key={choice.id} value={choice.id}>{choice.name}</option>))};
                     </select>
                     <button type='submit' onClick={this.handleNoteSubmit} className='addSubmit'>
                         Add Note

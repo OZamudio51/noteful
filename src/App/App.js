@@ -52,6 +52,7 @@ class App extends Component {
         })
       }
   
+     
       addNote = addNote => {
         this.setState({
           notes: this.state.notes.concat(addNote)   
@@ -97,7 +98,7 @@ class App extends Component {
             notes: this.state.notes,
             folders: this.state.folders,
             deleteNote: this.handleDeleteNote,
-            addfolder: this.addFolder,
+            addFolder: this.addFolder,
             addNote: this.addNote
         };
         return (

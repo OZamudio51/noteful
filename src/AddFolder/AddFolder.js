@@ -19,15 +19,16 @@ class AddFolder extends React.Component {
 
     updateFolderName(folderName) {
         this.setState({folderName : folderName});
-        console.log(this.state.folderName)
     }
 
-    formSubmitRe() {
-        this.setState({redirect: true});
-        this.renderRe();
+    formSubmitRedirect() {
+        this.setState({redirect: true}, function() { 
+            this.renderRedirect()
+        })
     }
 
-    renderRe = () => {
+    renderRedirect = () => {
+        console.log('i was here');
         if(this.state.redirect) {
             return <Redirect to ='/' />
         }
@@ -35,40 +36,40 @@ class AddFolder extends React.Component {
 
     handleFolderSubmit = e => {
         e.preventDefault();
+
         if(this.state.folderName.length === 0) {
-            alert('Please enter a folder name')
-            return;
+            return alert('Please enter a folder name')
         }
         const newFolder = {
             name: this.state.folderName
         };
-        console.log(newFolder);
 
         fetch(`${config.API_ENDPOINT}/folders`, {
-            method: 'POST',
+            method: "POST",
             body: JSON.stringify(newFolder),
             headers: {
-                'content-type': 'application/json'
+              "content-type": "application/json"
             }
-        })
-            .then(res => {
-                if(!res.ok)
-                return res.json().then(e => Promise.reject(e));
-                return res.json()
-            })
-            .then((newFolder) => {
-                this.context.AddFolder(newFolder);
-                this.formSubmitRe();
-            })
+          })
+          .then(res => {
+            if (!res.ok) 
+            return res.json()
+            .then(e => Promise.reject(e));
+            return res.json();
+          })
+          .then((newFolder) => {
+            this.context.addFolder(newFolder);
+            this.formSubmitRedirect();
+          })
             .catch(error => {
-                console.error({ error });
+              console.error({ error });
             });
     }
     
     render() {
         return (
             <div className='App'>
-                {this.renderRe()}
+                {this.renderRedirect()}
                 <form className='addFolder'>
                     <label htmlFor='folderName'>Name</label>
                     <input type='text' id='folderName' onChange={e => this.updateFolderName(e.target.value)} />
