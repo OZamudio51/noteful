@@ -9,7 +9,7 @@ export default class AddNote extends React.Component {
     constructor(props) {
         super(props)
         this.state ={
-            noteName: '',
+            note_name: '',
             contents: '',
             chosenFolder: 'b0715efe-ffaf-11e8-8eb2-f2801f1b9fd1',
             redirect: false,
@@ -18,8 +18,8 @@ export default class AddNote extends React.Component {
 
     static contextType = ApiContext;
 
-    updateNoteName(noteName) {
-        this.setState({ noteName: noteName });
+    updateNoteName(note_name) {
+        this.setState({ note_name: note_name });
       }
     
       updateContents(contents) {
@@ -44,7 +44,7 @@ export default class AddNote extends React.Component {
     handleNoteSubmit = e => {
         e.preventDefault();
 
-        if (this.state.noteName.length === 0) {
+        if (this.state.note_name.length === 0) {
             return alert('Please enter a note name');
         } 
         else if (this.state.contents.length === 0) {
@@ -52,13 +52,13 @@ export default class AddNote extends React.Component {
         }
 
         const newNote = {
-            name: this.state.noteName,
+            note_name: this.state.note_name,
             content: this.state.contents,
-            folderId: this.state.chosenFolder,
+            folder_id: this.state.chosenFolder,
             modified: new Date(),
         };
 
-        fetch(`${config.API_ENDPOINT}/notes`, {
+        fetch(`${config.API_ENDPOINT}/api/notes`, {
             method: "POST",
             body: JSON.stringify(newNote),
             headers: {
@@ -95,7 +95,7 @@ export default class AddNote extends React.Component {
                     />
                     <label htmlFor='folder'>Assigned Folder</label>
                     <select id='chosenFolder' onChange={e => this.updateChosenFolder(e.target.value)}>
-                        {folders.map(choice => (<option key={choice.id} value={choice.id}>{choice.name}</option>))};
+                        {folders.map(choice => (<option key={choice.id} value={choice.id}>{choice.folder_name}</option>))};
                     </select>
                     <button type='submit' onClick={this.handleNoteSubmit} className='addSubmit'>
                         Add Note

@@ -4,21 +4,23 @@ import ApiContext from '../ApiContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import config from '../config';
 import CircleButton from '../CircleButton/CircleButton';
-// import AddFolderStyle from '.AddFolderStyle';
 
 class AddFolder extends React.Component {
     constructor(props){
         super(props)
         this.state={
-            folderName: '',
+            // id: '',
+            folder_name: '',
             redirect: false
         }
     }
 
-    static contextType= ApiContext;
+    static contextType = ApiContext;
 
-    updateFolderName(folderName) {
-        this.setState({folderName : folderName});
+    updateFolderName(folder_name) {
+        this.setState({
+            folder_name : folder_name
+        });
     }
 
     formSubmitRedirect() {
@@ -28,7 +30,6 @@ class AddFolder extends React.Component {
     }
 
     renderRedirect = () => {
-        console.log('i was here');
         if(this.state.redirect) {
             return <Redirect to ='/' />
         }
@@ -37,21 +38,24 @@ class AddFolder extends React.Component {
     handleFolderSubmit = e => {
         e.preventDefault();
 
-        if(this.state.folderName.length === 0) {
+        if(this.state.folder_name.length === 0) {
             return alert('Please enter a folder name')
         }
+
         const newFolder = {
-            name: this.state.folderName
+            folder_name: this.state.folder_name,
         };
 
-        fetch(`${config.API_ENDPOINT}/folders`, {
+        fetch(`${config.API_ENDPOINT}/api/folders`, {
             method: "POST",
             body: JSON.stringify(newFolder),
             headers: {
-              "content-type": "application/json"
+              "content-type": "application/json",
+              'cors': 'no-cors'
             }
           })
           .then(res => {
+              console.log('here')
             if (!res.ok) 
             return res.json()
             .then(e => Promise.reject(e));
