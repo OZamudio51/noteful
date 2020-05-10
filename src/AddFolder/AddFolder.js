@@ -9,7 +9,6 @@ class AddFolder extends React.Component {
     constructor(props){
         super(props)
         this.state={
-            // id: '',
             folder_name: '',
             redirect: false
         }
@@ -55,7 +54,6 @@ class AddFolder extends React.Component {
             }
           })
           .then(res => {
-              console.log('here')
             if (!res.ok) 
             return res.json()
             .then(e => Promise.reject(e));

@@ -12,7 +12,7 @@ export default class AddNote extends React.Component {
         this.state ={
             note_name: '',
             contents: '',
-            chosenFolder: 'b0715efe-ffaf-11e8-8eb2-f2801f1b9fd1',
+            chosenFolder: '',
             redirect: false,
         };
     }
@@ -81,6 +81,7 @@ export default class AddNote extends React.Component {
             });
     };
 
+
     render () {
         const folders = this.context.folders;
 
@@ -96,6 +97,7 @@ export default class AddNote extends React.Component {
                     />
                     <label htmlFor='folder'>Assigned Folder</label>
                     <select id='chosenFolder' onChange={e => this.updateChosenFolder(e.target.value)}>
+                    <option value="" disabled selected hidden>Choose a folder</option>
                         {folders.map(choice => (<option key={choice.id} value={choice.id}>{choice.folder_name}</option>))};
                     </select>
                     <button type='submit' onClick={this.handleNoteSubmit} className='addSubmit'>
