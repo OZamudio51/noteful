@@ -4,6 +4,7 @@ import config from '../config';
 import { Redirect } from 'react-router-dom';
 import CircleButton from '../CircleButton/CircleButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import './AddNoteStyle.css';
 
 export default class AddNote extends React.Component {
     constructor(props) {
